@@ -1,0 +1,48 @@
+dataset:
+  dataset: imagenet
+
+stage1:
+  type: simrqgan2
+  n_embed: 8192
+  ema_update: True
+  hparams:
+    ch_mult: [1, 2, 4, 4, 4]
+    attn_resolutions: [8]
+    use_init_downsample: True
+    use_mid_block: True
+    use_attn: True
+  hparams_disc:
+    disc_conditional: False
+    disc_in_channels: 3
+    disc_start: 0
+    disc_weight: 0.75
+    disc_num_layers: 2
+    codebook_weight: 1.0
+    norm_type: gn
+  hparams_aux:
+    shared_codebook: False
+    bottom_start: 100000000000 # no bypass
+    decoding_type: concat
+    upsample: pixelshuffle
+
+optimizer:
+  use_amp: False
+  opt_type: adam
+  base_lr: 4e-5
+  grad_clip_norm: 0.0  # means don't clip
+  betas: [0.5, 0.9]
+  warmup_config:
+    multiplier: 1
+    warmup_epoch: 0.5  # 5% of total epochs
+    buffer_epoch: 0
+    min_lr: 4.0e-5
+    mode: fix
+    start_from_zero: True
+
+
+experiment:
+  local_batch_size: 16
+  valid_batch_size: 16
+  total_batch_size: 128
+  epochs: 15
+  save_ckpt_freq: 1
