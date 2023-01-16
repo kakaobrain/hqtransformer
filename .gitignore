@@ -8,7 +8,6 @@ notebooks/
 experiments/
 configs/dev/
 
-*.ipynb
 *.ckpt
 core.*
 
